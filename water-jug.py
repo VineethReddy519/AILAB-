@@ -1,39 +1,55 @@
-from collections import defaultdict
-import math;
-jug1=int(input("enter the jug1 value"))
-jug2=int(input("enter the jug2 value"))
-aim=int(input("enter the aim"))
-visited=defaultdict(lambda:false)
-def WaterJugSolver(amt1,amt2):
-    if(amt1==aim and amt2==0)or(amt2==aim and amt1==0):
-        print(amt1,amt2)
-        return true
-    if visited[(amt1,amt2)]==false:
-        print(amt1,amt2)
-    if visited[(amt1,amt2)]==true:
-            return(WaterJugSolver(0,amt2)or
-                   WaterJugSolver(amt1,0)or
-                  (WaterJugSolver(amt1,amt2)or
-                  (WaterJugSolver(amt1,jug2)or
-                   (WaterJugSolver(amt1+min(amt2,(jug1-amt1)),
-                                   amt2-min(amt2,(jug1-amt1)))or
-                    (WaterJugSolver(amt1-min(amt1,(jug2-amt2)),
-                                    amt2+min(amt1,(jug2-amt2))))))))
+def gcd(n,m):
+    if m==0:
+        return n
+    return gcd(m,n%m)
+
+def pour(to,from1,d):
+    if to>from1:
+        print("The water is flowing from big jar to small jar")
     else:
-            return false
-    def check():
-            if(jug1<=aim)and(jug2<=aim):
-                print("Not Possible")
-                return true
-            elif(jug1/2==jug2 or jug2/2==jug1)and(jug1!=aim and jug2!=aim):
-                print("Not Possible")
-                return true
-            elif(aim%(math.gcd(jug1,jug2))!=0):
-                print("Not Possible")
-                return true
-            result=ckeck();
-            if result!=true:
-                print("Steps: ")
-                WaterJugSolver(0,0)
-                
+        print("The water is flowing from small jar to big jar")
+    print("The water exchange combinations are: ")
+    fromjug=0
+    tojug=0
+    step=0
+    print("(",tojug,",",fromjug,")")
+    while ((fromjug is not d) and (tojug is not d)):
+        if fromjug==0:
+            fromjug=from1
+            step=step+1
+            print("(",tojug,",",fromjug,")")
+        if tojug==to:
+            tojug=0
+            step=step+1
+            print("(",tojug,",",fromjug,")")
+        temp=min(fromjug,to-tojug)
+        fromjug=fromjug-temp
+        tojug=tojug+temp
+        step=step+1
+        print("(",tojug,",",fromjug,")")
+    
+    return step
+
+
+def minsteps(n,m,d):
+    if m>n:
+        temp=m
+        m=n
+        n=temp
         
+    if (d%(gcd(n,m))!=0) or d>n:
+        
+        return -1
+   
+    return min(pour(n,m,d),pour(m,n,d))
+
+def main():
+    n=int(input("Enter the quantity in first jug: "))
+    m=int(input("Enter the quantity in second jug: "))
+    d=int(input("Enter the quantity you needed: "))
+    c=minsteps(n,m,d)
+    if c==-1:
+        print("It is not possible to get the required litres in either of the two jugs")
+    else:
+        print("The minimum number of steps required are to get the quantity ",d," is ",c)
+main()
