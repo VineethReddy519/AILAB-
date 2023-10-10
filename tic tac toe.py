@@ -15,7 +15,7 @@ def check_winner(board, player):
             return True
         if all(board[j][i] == player for j in range(3)):
             return True
-    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):  # Check diagonals
+    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
         return True
     return False
 def computer_move(board):
